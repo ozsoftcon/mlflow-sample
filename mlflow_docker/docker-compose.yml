@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  mlflow_backend:
+      restart: always
+      image: mysql/mysql-server:5.7.28
+      container_name: mlflow_db
+      networks:
+        frontend:
+          ipv4_address: 10.5.0.5
+      ports:
+        - "3306:3306"
+      environment:
+        - MYSQL_DATABASE=mlflow_database
+        - MYSQL_USER=admin
+        - MYSQL_PASSWORD=1234#567
+        - MYSQL_ROOT_PASSWORD=1234#567
+        - MYSQL_ROOT_HOST=10.5.0.1
+      volumes:
+        - data:/var/lib/mysql
+      healthcheck:
+        test: [ "CMD-SHELL", "mysqladmin ping -P 3306 -p1234#567 | grep 'mysqld is alive' || exit 1" ]
+        interval: 10s
+        timeout: 30s
+        retries: 10
+  mlflow_server:
+    image: 'mlflow-server'
+    depends_on:
+      mlflow_backend:
+        condition: service_healthy
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - data:/mlflow_artifacts
+    entrypoint: mlflow server --backend-store-uri mysql+pymysql://admin:1234#567@mlflow_backend:3306/mlflow_database --default-artifact-root /mlflow_artifacts --host 0.0.0.0 --port 5000
+    networks:
+      frontend:
+        ipv4_address: 10.5.0.3
+
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
+volumes:
+  data:
