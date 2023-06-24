@@ -23,6 +23,10 @@ setuptools.setup(
         "License :: MIT License",
         "Operating System :: OS Independent",
     ],
-    packages=setuptools.find_packages(include=['ozsoftcon', 'ozsoftcon.mlflow_wrap']),
+    packages=setuptools.find_packages(include=[
+        'ozsoftcon',
+        'ozsoftcon.mlflow_wrap',
+        'ozsoftcon.utils'
+    ]),
     python_requires=">=3.9, <4.0"
 )
