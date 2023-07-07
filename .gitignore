@@ -5,9 +5,9 @@ dist/**
 
 *.egg-info/**
 
-**__pycache__/**
-test/__pycache__/**
-test/ozsoftcon_mlflow/__pycache__/*
-ozsoftcon/**/__pytest_cache__/**
+**__pycache__/
+**__pytest_cache__/**
 
 .env
+
+valid-tracking-uri

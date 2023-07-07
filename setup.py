@@ -27,6 +27,7 @@ setuptools.setup(
         'ozsoftcon',
         'ozsoftcon.mlflow_wrap',
         'ozsoftcon.utils'
+        'ozsoftcon.ml'
     ]),
     python_requires=">=3.9, <4.0"
 )
