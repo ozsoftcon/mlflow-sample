@@ -22,7 +22,7 @@ class TestCreateExperiment(TestCase):
                 else:
                     return None
 
-            def create_experiment(self, name= ""):
+            def create_experiment(self, name=""):
                 if name == "new":
                     return 2
 
