@@ -1,5 +1,6 @@
 from os import environ
 from dotenv import load_dotenv
+from mlflow import log_param, ActiveRun
 from ozsoftcon.mlflow_wrap import (
     MLFlowConfig, create_experiment
 )
@@ -16,15 +17,16 @@ def main():
     print("Creating New Experiment")
     experiment_id = create_experiment(
         mlflow_config.mlflow_client,
-        "sample_experiment2"
+        "sample_experiment3"
     )
-    print(f"New Experiment ID: {experiment_id}")
-    print("Reusing Old Experiment")
-    experiment_id = create_experiment(
-        mlflow_config.mlflow_client,
-        "sample_experiment2"
+
+    current_run = mlflow_config.create_run_for_experiment(
+        experiment_id,
+        tags={"test": "test"},
+        run_name="run_name"
     )
-    print(f"Reusing Experiment Id {experiment_id}")
+    with ActiveRun(current_run) as run:
+        log_param("test-value", 10)
 
 
 if __name__ == "__main__":
