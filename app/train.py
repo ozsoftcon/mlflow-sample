@@ -2,9 +2,9 @@ from os import environ
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_mutual_info_score, v_measure_score
 from dotenv import load_dotenv
-from mlflow import log_param, ActiveRun
+from mlflow import log_params, start_run, log_metrics, set_experiment
 from ozsoftcon.mlflow_wrap import (
-    MLFlowConfig, create_experiment
+    MLFlowConfig, create_experiment, create_run_in_experiment
 )
 from ozsoftcon.ml import read_ml_data
 
@@ -16,51 +16,64 @@ registry_uri = environ.get("MLFLOW_REGISTRY_URI", "")
 
 def main():
 
-    # mlflow_config = MLFlowConfig(tracking_uri, registry_uri)
-    # print("Creating New Experiment")
-    # experiment_id = create_experiment(
-    #     mlflow_config.mlflow_client,
-    #     "sample_experiment3"
-    # )
-    #
-    # current_run = mlflow_config.create_run_for_experiment(
-    #     experiment_id,
-    #     tags={"test": "test"},
-    #     run_name="run_name"
-    # )
-    # with ActiveRun(current_run) as run:
-    #     log_param("test-value", 10)
+    mlflow_config = MLFlowConfig(tracking_uri, registry_uri)
+    print("Creating New Experiment")
+    experiment_id = create_experiment(
+        mlflow_config.mlflow_client,
+        "Simple Clustering Problem"
+    )
+    set_experiment(experiment_id=experiment_id)
 
-    test_fraction = 0.1
-    validation_fraction = 0.1
-    train_data, validation_data, _ = read_ml_data(
-        "./sample_data/data.csv",
-        test_fraction=test_fraction,
-        validation_fraction=validation_fraction,
-        seed_value=142
+    current_run = create_run_in_experiment(
+        mlflow_config.mlflow_client,
+        experiment_id,
+        tags={"test": "test"},
+        run_name="Try with clusters 2"
     )
 
-    model_parameters = {
-        "n_clusters": 4,
-        "tol": 1e-10
-    }
+    with start_run(run_id=current_run.info.run_id) as run:
+        test_fraction = 0.1
+        validation_fraction = 0.1
+        data_fold_seed = 142
+        train_data, validation_data, _ = read_ml_data(
+            "./sample_data/data.csv",
+            test_fraction=test_fraction,
+            validation_fraction=validation_fraction,
+            seed_value=data_fold_seed
+        )
 
-    train_features = train_data[:, 0:2]
-    train_labels = train_data[:, 2]
-    validation_features = validation_data[:, 0:2]
-    validation_labels = validation_data[:, 2]
-    model = KMeans(**model_parameters)
-    model.fit(train_features, train_labels)
+        training_parameters = {
+            "data_fold_seed_value": data_fold_seed,
+            "validation_fraction": validation_fraction,
+            "test_fraction": test_fraction,
+            "algorithm": "KMeans"
+        }
 
-    prediction = model.predict(validation_features)
-    adjusted_mi_score = adjusted_mutual_info_score(validation_labels, prediction)
-    v_measure = v_measure_score(validation_labels, prediction)
+        log_params(training_parameters)
 
-    print(max(prediction))
-    print(validation_labels[0:10])
+        model_parameters = {
+            "n_clusters": 2
+        }
+        log_params(model_parameters)
 
-    print(f"Adjusted mutual informatio score {adjusted_mi_score}")
-    print(f"V Measure {v_measure}")
+        train_features = train_data[:, 0:2]
+        train_labels = train_data[:, 2]
+        validation_features = validation_data[:, 0:2]
+        validation_labels = validation_data[:, 2]
+        model = KMeans(**model_parameters)
+        model.fit(train_features, train_labels)
+
+        prediction = model.predict(validation_features)
+        adjusted_mi_score = adjusted_mutual_info_score(validation_labels, prediction)
+        v_measure = v_measure_score(validation_labels, prediction)
+
+        validation_metrics = {
+            "adjusted_mi_score": adjusted_mi_score,
+            "v_measure": v_measure
+        }
+
+        log_metrics(validation_metrics)
+
 
 if __name__ == "__main__":
     main()

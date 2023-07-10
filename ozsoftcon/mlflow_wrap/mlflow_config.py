@@ -1,9 +1,6 @@
-from typing import Optional, Dict, Any
-from uuid import uuid4
 from dotenv import load_dotenv
 from mlflow.client import MlflowClient
-from mlflow import set_tracking_uri, set_registry_uri
-from mlflow.entities import Run
+from mlflow import set_tracking_uri, set_registry_uri, ActiveRun, start_run
 
 from ..utils import InvalidMLFlowUri
 
@@ -32,18 +29,5 @@ class MLFlowConfig():
             registry_uri
         )
 
-    def create_run_for_experiment(
-            self,
-            experiment_id: str,
-            tags: Optional[Dict[str, Any]] = None,
-            run_name: Optional[str] = None
-    ) -> Run:
-        if not run_name:
-            run_name = f"Run {uuid4().hex} created for experiment"
-        new_run = self.mlflow_client.create_run(
-            experiment_id, tags=tags, run_name=run_name
-        )
-
-        return new_run
 
 
