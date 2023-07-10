@@ -26,7 +26,7 @@ setuptools.setup(
     packages=setuptools.find_packages(include=[
         'ozsoftcon',
         'ozsoftcon.mlflow_wrap',
-        'ozsoftcon.utils'
+        'ozsoftcon.utils',
         'ozsoftcon.ml'
     ]),
     python_requires=">=3.9, <4.0"

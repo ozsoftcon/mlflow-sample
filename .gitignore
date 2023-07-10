@@ -11,3 +11,4 @@ dist/**
 .env
 
 valid-tracking-uri
+mlruns
