@@ -2,7 +2,7 @@ from os import environ
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_mutual_info_score, v_measure_score
 from dotenv import load_dotenv
-from mlflow import log_params, start_run, log_metrics, set_experiment
+from mlflow import log_params, start_run, log_metrics, set_experiment, lo
 from ozsoftcon.mlflow_wrap import (
     MLFlowConfig, create_experiment, create_run_in_experiment
 )
