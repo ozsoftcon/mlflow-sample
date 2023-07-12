@@ -1,0 +1,14 @@
+{
+    "name": "mlflow-sample",
+    "channels": ["conda-forge"],
+    "dependencies": [
+        "python=3.10.11",
+        {
+            "pip": [
+                "numpy==1.24.3",
+                "scikit-learn==1.2.2",
+                "mlflow==2.3.2"
+            ],
+        },
+    ],
+}

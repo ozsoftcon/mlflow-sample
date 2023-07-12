@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  mlflow_backend:
+      restart: always
+      image: mysql/mysql-server:5.7.28
+      container_name: mlflow_db
+      networks:
+        db:
+          ipv4_address: 10.5.0.5
+      ports:
+        - "3306:3306"
+      environment:
+        - MYSQL_DATABASE=mlflow_database
+        - MYSQL_USER=admin
+        - MYSQL_PASSWORD=1234#567
+        - MYSQL_ROOT_PASSWORD=1234#567
+        - MYSQL_ROOT_HOST=10.5.0.1
+      volumes:
+        - ./mysql_data:/var/lib/mysql
+networks:
+  db:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
+volumes:
+  data:

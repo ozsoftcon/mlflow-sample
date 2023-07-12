@@ -1,6 +1,6 @@
 from typing import Dict, Optional, Any
 from uuid import uuid4
-from mlflow import set_experiment, end_run
+from mlflow import set_experiment
 from mlflow.entities import Run
 from mlflow.client import MlflowClient
 

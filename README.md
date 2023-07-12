@@ -32,18 +32,31 @@ $ pytest test/test_**
 
 If the unit tests run successfully, we are good to go.
 
-## Preparing and running the docker
+## Preparing and running the MLFlow Server
 
 ```commandline
-$ cd ./mlflow-docker
+$ cd ./mlflow-data
 $ docker compose up -d --build
 ```
+This will start the MySQL server as backend for the MLFlow.
 
-Once the build finishes, you can browse the server at `http://127.0.0.1:5000`.
-![MLFlowService](./images/mlflow_server.png)
-
-NOTE: If you already have `MYSql` running on your system, you have to stop that.
-On Ubuntu you can try
+NOTE: If you already have `MySql` running on your system, you have to stop that.
 ```commandline
 $ sudo service mysql stop
 ```
+
+Otherwise, you can modify the `docker-componse.yml` to use a different port.
+
+Finally, start the MLFlow server:
+
+```commandline
+$ export MLFLOW_DB_USER=admin
+$ export MLFLOW_DB_PASSWORD=1234#567
+$ export MLFLOW_ARTIFACT_PATH=/add/any/wrtable/path/
+$ mlflow server --backend-store-uri mysql+pymysql://$MLFLOW_DB_USER:$MLFLOW_DB_PWD@127.0.0.1:3306/mlflow_database --default-artifact-root $MLFLOW_ARTIFACT_PATH --host 0.0.0.0 --port 5000
+```
+
+Once the server starts, you can browse the server at `http://127.0.0.1:5000`.
+![MLFlowService](./images/mlflow_server.png)
+
+

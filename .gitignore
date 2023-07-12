@@ -12,3 +12,6 @@ dist/**
 
 valid-tracking-uri
 mlruns
+
+mlflow_data/artifacts
+mlflow_data/mysql_data
