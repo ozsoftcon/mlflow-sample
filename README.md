@@ -7,7 +7,7 @@ from [here](https://docs.conda.io/en/main/miniconda.html#latest-miniconda-instal
 
 2. Run the following in terminal:
 ```commandline
-$ conda create -n mlflow-env python==3.10.11
+$ conda create -n mlflow-sample python==3.10.11
 $ conda activate mlflow-sample
 $ pip install -r requirements.txt
 $ pip install -r requirements-dev.txt
