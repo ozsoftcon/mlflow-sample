@@ -2,7 +2,8 @@ from os import environ
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_mutual_info_score, v_measure_score
 from dotenv import load_dotenv
-from mlflow import log_params, start_run, log_metrics, set_experiment, lo
+from mlflow import log_params, start_run, log_metrics, set_experiment, log_artifact
+from mlflow.sklearn import log_model, SERIALIZATION_FORMAT_CLOUDPICKLE
 from ozsoftcon.mlflow_wrap import (
     MLFlowConfig, create_experiment, create_run_in_experiment
 )
@@ -28,7 +29,7 @@ def main():
         mlflow_config.mlflow_client,
         experiment_id,
         tags={"test": "test"},
-        run_name="Try with clusters 2"
+        run_name="Try with clusters 4"
     )
 
     with start_run(run_id=current_run.info.run_id) as run:
@@ -52,7 +53,7 @@ def main():
         log_params(training_parameters)
 
         model_parameters = {
-            "n_clusters": 2
+            "n_clusters": 4
         }
         log_params(model_parameters)
 
@@ -73,6 +74,14 @@ def main():
         }
 
         log_metrics(validation_metrics)
+
+        log_model(
+            sk_model=model,
+            artifact_path="clustering_model",
+            conda_env="conda_env.yaml",
+            serialization_format=SERIALIZATION_FORMAT_CLOUDPICKLE,
+            registered_model_name="simple_clustering_model"
+        )
 
 
 if __name__ == "__main__":
