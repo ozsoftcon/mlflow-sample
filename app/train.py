@@ -2,7 +2,7 @@ from os import environ
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_mutual_info_score, v_measure_score
 from dotenv import load_dotenv
-from mlflow import log_params, start_run, log_metrics, set_experiment, log_artifact
+from mlflow import log_params, start_run, log_metrics, set_experiment
 from mlflow.sklearn import log_model, SERIALIZATION_FORMAT_CLOUDPICKLE
 from ozsoftcon.mlflow_wrap import (
     MLFlowConfig, create_experiment, create_run_in_experiment
@@ -29,21 +29,27 @@ def main():
         mlflow_config.mlflow_client,
         experiment_id,
         tags={"test": "test"},
-        run_name="Try with clusters 4"
+        run_name="Try with clusters 6"
     )
 
     with start_run(run_id=current_run.info.run_id) as run:
         test_fraction = 0.1
         validation_fraction = 0.1
         data_fold_seed = 142
+        # in this simple case, we are using a local file
+        # so storing that as a parameter might be good enough
+        # for more complicated use cases, you can use mlflow.data
+        # APIs to log data
+        data_source = "./sample_data/data.csv"
         train_data, validation_data, _ = read_ml_data(
-            "./sample_data/data.csv",
+            data_source,
             test_fraction=test_fraction,
             validation_fraction=validation_fraction,
             seed_value=data_fold_seed
         )
 
         training_parameters = {
+            "source_data": data_source,
             "data_fold_seed_value": data_fold_seed,
             "validation_fraction": validation_fraction,
             "test_fraction": test_fraction,
@@ -53,7 +59,7 @@ def main():
         log_params(training_parameters)
 
         model_parameters = {
-            "n_clusters": 4
+            "n_clusters": 6
         }
         log_params(model_parameters)
 
