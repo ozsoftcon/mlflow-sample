@@ -59,4 +59,6 @@ $ mlflow server --backend-store-uri mysql+pymysql://$MLFLOW_DB_USER:$MLFLOW_DB_P
 Once the server starts, you can browse the server at `http://127.0.0.1:5000`.
 ![MLFlowService](./images/mlflow_server.png)
 
+Associated Medium Article: https://medium.com/@rajib.chakravorty/introduction-to-mlflow-with-complete-code-25b6ced6d32f
+
 
