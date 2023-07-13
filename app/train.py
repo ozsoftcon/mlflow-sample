@@ -29,7 +29,7 @@ def main():
         mlflow_config.mlflow_client,
         experiment_id,
         tags={"test": "test"},
-        run_name="Try with clusters 6"
+        run_name="Try with clusters 4"
     )
 
     with start_run(run_id=current_run.info.run_id) as run:
@@ -59,7 +59,7 @@ def main():
         log_params(training_parameters)
 
         model_parameters = {
-            "n_clusters": 6
+            "n_clusters": 4
         }
         log_params(model_parameters)
 

@@ -10,7 +10,7 @@ load_dotenv()
 tracking_uri = environ.get("MLFLOW_TRACKING_URI", "")
 registry_uri = environ.get("MLFLOW_REGISTRY_URI", "")
 
-CHOSEN_RUN_ID="3c435465b12547b1968da5df7bc8b4be"
+CHOSEN_RUN_ID = "60141d9dad9c45788d8522678b77b107"
 run_uri = f"runs:/{CHOSEN_RUN_ID}/clustering_model"
 
 def main():
